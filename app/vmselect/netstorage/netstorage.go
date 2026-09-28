@@ -2144,11 +2144,6 @@ func (snr *storageNodesRequest) collectResults(partialResultsCounter *metrics.Co
 		group := result.group
 		if err := f(result.data); err != nil {
 			snr.finishQueryTracer(result.qt, fmt.Sprintf("error: %s", err))
-			if errors.Is(err, context.Canceled) {
-				// Immediately return the error if request was canceled by client
-				snr.finishQueryTracers("cancel request because of client canceled request")
-				return false, err
-			}
 			var er *errRemote
 			if errors.As(err, &er) && !strings.Contains(er.msg, "search.maxConcurrentRequests") && !strings.Contains(er.msg, "vmselectClusterNative") {
 				// Immediately return the error reported by vmstorage to the caller,
