@@ -2146,6 +2146,7 @@ func (snr *storageNodesRequest) collectResults(partialResultsCounter *metrics.Co
 			snr.finishQueryTracer(result.qt, fmt.Sprintf("error: %s", err))
 			if errors.Is(err, context.Canceled) {
 				// Immediately return the error if request was canceled by client
+				snr.finishQueryTracers("cancel request because of client canceled request")
 				return false, err
 			}
 			var er *errRemote
