@@ -2,6 +2,7 @@ package promql
 
 import (
 	"math"
+	"net/http"
 	"testing"
 	"time"
 
@@ -64,7 +65,10 @@ func TestExecSuccess(t *testing.T) {
 
 	f := func(q string, resultExpected []netstorage.Result) {
 		t.Helper()
+		ctx, cancel := searchutil.NewContextWithExceededDeadline()
+		defer cancel()
 		ec := &EvalConfig{
+			Context: ctx,
 			AuthTokens: []*auth.Token{{
 				AccountID: accountID,
 				ProjectID: projectID,
@@ -75,7 +79,6 @@ func TestExecSuccess(t *testing.T) {
 			Step:               step,
 			MaxPointsPerSeries: 1e4,
 			MaxSeries:          1000,
-			Deadline:           searchutil.NewDeadline(time.Now(), time.Minute, ""),
 			RoundDigits:        100,
 		}
 		for range 5 {
@@ -10466,7 +10469,11 @@ func TestExecSuccess(t *testing.T) {
 func TestExecError(t *testing.T) {
 	f := func(q string) {
 		t.Helper()
+		var r http.Request
+		ctx, cancel := searchutil.GetContextForQuery(&r, time.Now())
+		defer cancel()
 		ec := &EvalConfig{
+			Context: ctx,
 			AuthTokens: []*auth.Token{{
 				AccountID: 123,
 				ProjectID: 567,
@@ -10476,7 +10483,6 @@ func TestExecError(t *testing.T) {
 			Step:               100,
 			MaxPointsPerSeries: 1e4,
 			MaxSeries:          1000,
-			Deadline:           searchutil.NewDeadline(time.Now(), time.Minute, ""),
 			RoundDigits:        100,
 		}
 		for range 4 {
