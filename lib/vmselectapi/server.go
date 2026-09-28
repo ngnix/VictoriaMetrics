@@ -1316,7 +1316,7 @@ func (cm *connMonitor) watch() {
 		n, err := cm.bc.Conn.Read(buf[:])
 		if err != nil {
 			if !errors.Is(err, os.ErrDeadlineExceeded) && !errors.Is(err, io.EOF) {
-				logger.Errorf("connMonitor: unexpcted Read error for the connection %q: %s", cm.bc.RemoteAddr(), err)
+				logger.Errorf("connMonitor: unexpected Read error for the connection %q: %s", cm.bc.RemoteAddr(), err)
 			}
 		}
 		if n > 0 {

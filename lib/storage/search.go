@@ -581,5 +581,3 @@ const (
 	paceLimiterMediumIterationsMask = 1<<14 - 1
 	paceLimiterSlowIterationsMask   = 1<<12 - 1
 )
-
-var noDeadlineContext = context.Background()

@@ -23,6 +23,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+var noDeadlineContext = context.Background()
+
 func TestReplaceAlternateRegexpsWithGraphiteWildcards(t *testing.T) {
 	f := func(q, resultExpected string) {
 		t.Helper()
