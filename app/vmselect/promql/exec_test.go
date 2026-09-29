@@ -2,14 +2,12 @@ package promql
 
 import (
 	"math"
-	"net/http"
 	"testing"
 	"time"
 
 	"github.com/VictoriaMetrics/metricsql"
 
 	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/netstorage"
-	"github.com/VictoriaMetrics/VictoriaMetrics/app/vmselect/searchutil"
 	"github.com/VictoriaMetrics/VictoriaMetrics/lib/auth"
 	"github.com/VictoriaMetrics/VictoriaMetrics/lib/storage"
 )
@@ -65,10 +63,7 @@ func TestExecSuccess(t *testing.T) {
 
 	f := func(q string, resultExpected []netstorage.Result) {
 		t.Helper()
-		ctx, cancel := searchutil.NewContextWithExceededDeadline()
-		defer cancel()
 		ec := &EvalConfig{
-			Context: ctx,
 			AuthTokens: []*auth.Token{{
 				AccountID: accountID,
 				ProjectID: projectID,
@@ -10469,11 +10464,7 @@ func TestExecSuccess(t *testing.T) {
 func TestExecError(t *testing.T) {
 	f := func(q string) {
 		t.Helper()
-		var r http.Request
-		ctx, cancel := searchutil.GetContextForQuery(&r, time.Now())
-		defer cancel()
 		ec := &EvalConfig{
-			Context: ctx,
 			AuthTokens: []*auth.Token{{
 				AccountID: 123,
 				ProjectID: 567,

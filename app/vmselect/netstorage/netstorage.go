@@ -442,9 +442,6 @@ func unpackWorker(ctx context.Context, workChs []chan *unpackWork, workerID uint
 
 	// Then help others with their work.
 	for i := uint(1); i < uint(len(workChs)); i++ {
-		if err := ctx.Err(); err != nil {
-			break
-		}
 		idx := (i + workerID) % uint(len(workChs))
 		ch := workChs[idx]
 		for len(ch) > 0 {
@@ -518,10 +515,6 @@ func (pts *packedTimeseries) unpackTo(ctx context.Context, dst []*sortBlock, tbf
 		tmpBlock := getTmpStorageBlock()
 		var err error
 		for _, addr := range pts.addrs {
-			if ctxErr := ctx.Err(); ctxErr != nil {
-				err = searchutil.AnnotateContextError(ctx)
-				break
-			}
 			initUnpackWork(upw, addr)
 			upw.unpack(tmpBlock)
 			if upw.err != nil {

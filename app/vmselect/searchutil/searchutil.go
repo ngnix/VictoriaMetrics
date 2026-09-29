@@ -101,18 +101,6 @@ func newContext(ctx context.Context, deadline deadline) (context.Context, func()
 	return ctx, cancel
 }
 
-// NewContextWithExceededDeadline return new context with exceeded dedline.
-//
-// This function is for testing purposes. NewContext must be used
-// in prod instead.
-func NewContextWithExceededDeadline() (context.Context, func()) {
-	ctx := context.Background()
-	deadline := deadline{}
-	ctx = context.WithValue(ctx, deadlineKey, deadline)
-	ctx, cancel := context.WithDeadline(ctx, time.Unix(int64(deadline.deadlineTimestamp()), 0))
-	return ctx, cancel
-}
-
 // AnnotateContextError enriches a context error with deadline details when the deadline was exceeded
 func AnnotateContextError(ctx context.Context) error {
 	err := ctx.Err()
